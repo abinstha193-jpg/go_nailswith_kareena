@@ -1,186 +1,370 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Go Nails With Kareena</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        background: #ffe6f0;
-        color: #333;
-    }
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #e6a4b4;
+}
 
-    header {
-        background: #ff4da6;
-        color: white;
-        padding: 20px;
-        text-align: center;
-    }
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: #e6a4b4;
+  position: sticky;
+  top: 0;
+}
 
-    header img {
-        width: 80px;
-        display: block;
-        margin: auto;
-        margin-bottom: 10px;
-        border-radius: 50%;
-    }
+/* LOGO */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-    header h1 {
-        margin: 0;
-    }
+.logo img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
 
-    .container {
-        padding: 20px;
-        max-width: 1000px;
-        margin: auto;
-    }
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 600;
+}
 
-    h2 {
-        color: #ff1a75;
-    }
+/* NAV LINKS */
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
 
-    .card {
-        background: white;
-        padding: 15px;
-        margin: 15px 0;
-        border-radius: 15px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
+.nav-links a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+  font-size: 20px;
+}
 
-    .images {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+/* BUTTON */
+.book-btn {
+  background: black;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 25px;
+  text-decoration: none;
+}
 
-    .images img {
-        width: 200px;
-        border-radius: 12px;
-    }
+/* HERO */
+.hero {
+  height: 90vh;
+  background: url("nail1.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
 
-    .btn {
-        display: inline-block;
-        background: #ff1a75;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: bold;
-        margin-top: 10px;
-    }
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 70px;
+}
 
-    .btn:hover {
-        background: #e6005c;
-    }
+/* SERVICES */
+.services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 40px;
+}
 
-    iframe {
-        display: block;
-        margin: 20px auto;
-        border-radius: 12px;
-    }
+.service img {
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+}
 
-    footer {
-        text-align: center;
-        padding: 15px;
-        background: #ff4da6;
-        color: white;
-        margin-top: 20px;
-    }
+/* ===== POPUP ===== */
+.popup {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
 
-    a {
-        color: #ff1a75;
-        text-decoration: none;
-        font-weight: bold;
-    }
+.popup-content {
+  background: white;
+  padding: 20px;
+  width: 300px;
+  margin: 100px auto;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.popup-content button {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  background: black;
+  color: white;
+  cursor: pointer;
+}
+
+/* ===== SLIDER ===== */
+.slider {
+  display: none;
+  padding: 20px;
+}
+
+.slider.active {
+  display: block;
+}
+
+.slider-track {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.slider-track img {
+  height: 200px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* ===== LIGHTBOX ===== */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  justify-content: center;
+  align-items: center;
+}
+
+.lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.lightbox.show {
+  display: flex;
+}
+
+/* SECTION */
+.section {
+  padding: 40px;
+  text-align: center;
+}
+
+/* CONTACT */
+.contact {
+  background: #f8f8f8;
+}
+
+/* FOOTER */
+footer {
+  background: black;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
 </style>
 
 </head>
 
 <body>
 
-<header>
-    <!-- LOGO -->
-    <img src="logo.jpeg" alt="Kareena Logo">
+<!-- NAVBAR -->
 
-    <h1>💅 Go Nails With Kareena</h1>
-</header>
+<div class="navbar">
 
-<div class="container">
+  <div class="logo">
+    <img src="logo.jpg" alt="logo">
+    <div class="logo-text">Go Nails With Kareena</div>
+  </div>
 
-    <div class="card">
-        <h2>About Us</h2>
-        <p>
-            Welcome to Go Nails With Kareena! We provide stylish, trendy, 
-            and high-quality nail services. From simple manicures to 
-            creative nail art, we make your nails stand out.
-        </p>
-    </div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#" onclick="openPopup('services')">Services</a>
+    <a href="#" onclick="openPopup('contact')">Contact</a>
+    <a href="#" onclick="openPopup('about')">About Us</a>
+    <a href="#" onclick="openPopup('gallery')">Gallery</a>
 
-    <div class="card">
-        <h2>Our Services</h2>
-        <ul>
-            <li>Manicure</li>
-            <li>Pedicure</li>
-            <li>Gel Nails</li>
-            <li>Nail Extensions</li>
-        </ul>
+```
+<a href="https://instagram.com/go_nailswith_kareena" target="_blank"><i class="fab fa-instagram"></i></a>
+<a href="https://www.facebook.com/share/1EFQ8KEnRU/?mibextid=wwXIfr" target="_blank"><i class="fab fa-facebook"></i></a>
+<a href="https://www.tiktok.com/@go_nailswith_kareena" target="_blank"><i class="fab fa-tiktok"></i></a>
+```
 
-        <p>
-            We use premium products and maintain high hygiene standards.
-        </p>
-    </div>
+  </div>
 
-    <div class="card">
-        <h2>Nail Designs</h2>
-        <div class="images">
-            <img src="nail1.jpg">
-            <img src="nail2.jpg">
-        </div>
-    </div>
-
-    <!-- BOOKING SECTION -->
-    <div class="card" style="text-align:center;">
-        <h2>Book Your Appointment</h2>
-        <p>Click below to book your nail session 💅</p>
-
-        <!-- WhatsApp booking example -->
-        <a class="btn" href="https://wa.me/977XXXXXXXXXX" target="_blank">
-            Book Now on WhatsApp
-        </a>
-    </div>
-
-    <!-- CONTACT SECTION -->
-    <div class="card">
-        <h2>Contact Us</h2>
-
-        <p><b>Phone:</b> 98XXXXXXXX</p>
-        <p><b>Email:</b> kareenanails@gmail.com</p>
-        <p><b>Location:</b> Kathmandu, Nepal</p>
-
-        <p>
-            Follow us on 
-            <a href="#">Instagram</a>
-        </p>
-    </div>
-
-    <!-- VIDEO -->
-    <div class="card">
-        <h2>Nail Tutorial</h2>
-        <iframe width="560" height="315"
-        src="https://www.youtube.com/embed/8c7xY0f9r0E"
-        allowfullscreen>
-        </iframe>
-    </div>
+<a href="https://wa.me/9779813990976" class="book-btn">Book Now</a>
 
 </div>
 
+<!-- HERO -->
+
+<div class="hero">
+  <div>
+    <h1>Be Happy. Be Beautiful. Be You.</h1>
+    <p>Welcome to Go Nails With Kareena — Get Glam Without Leaving Home.</p>
+    <a class="book-btn" href="https://wa.me/9779813990976">Book Now</a>
+  </div>
+</div>
+
+<!-- SERVICES -->
+
+<div id="servicesPopup" class="popup">
+  <div class="popup-content">
+    <h2>Services</h2>
+    <button onclick="openSlider('gel')">Gel Nail Extension</button>
+    <button onclick="openSlider('polish')">Gel Polish</button>
+    <button onclick="closeAllPopups()">Close</button>
+  </div>
+</div>
+
+  <div class="service" onclick="openPopup()">
+    <img src="nail2.jpg">
+    <h3>Nail Art</h3>
+  </div>
+
+  <div class="service" onclick="openPopup()">
+    <img src="nail1.jpg">
+    <h3>Gel Nails</h3>
+  </div>
+</div>
+
+<!-- POPUP -->
+
+<div id="servicePopup" class="popup">
+  <div class="popup-content">
+    <h2>Select Service</h2>
+    <button onclick="openSlider('gel')">Gel Nail Extension</button>
+    <button onclick="openSlider('polish')">Gel Polish</button>
+    <button onclick="closePopup()">Close</button>
+  </div>
+</div>
+
+<!-- SLIDER -->
+
+<div id="slider" class="slider">
+  <div class="slider-track" id="sliderTrack"></div>
+</div>
+
+<!-- CONTACT -->
+
+<div id="contactPopup" class="popup">
+  <div class="popup-content">
+    <h2>Contact</h2>
+    <p>📍 Kathmandu</p>
+    <p>📞 9813990976</p>
+    <button onclick="closeAllPopups()">Close</button>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div id="aboutPopup" class="popup">
+  <div class="popup-content">
+    <h2>About Us</h2>
+    <p>We provide premium nail & lash services with modern style.</p>
+    <button onclick="closeAllPopups()">Close</button>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div id="galleryPopup" class="popup">
+  <div class="popup-content">
+    <h2>Gallery</h2>
+    <p>Click services to view full gallery.</p>
+    <button onclick="closeAllPopups()">Close</button>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg">
+</div>
+
+<!-- ABOUT -->
+
+<div class="section">
+  <h2>About Us</h2>
+  <p>Professional nail services with modern design and premium quality.</p>
+</div>
+
+<!-- CONTACT -->
+
+<div class="section contact">
+  <h2>Contact</h2>
+  <p>📍 Kathmandu</p>
+  <p>📞 9813990976</p>
+</div>
+
+<!-- FOOTER -->
+
 <footer>
-    © 2026 Go Nails With Kareena 💖
+  © Go Nails With Kareena 💖
 </footer>
+
+<script>
+const galleryData = {
+  gel: ["nail1.jpg","nail2.jpg"],
+  polish: ["nail2.jpg","nail1.jpg"]
+};
+
+function openPopup(type){
+  closeAllPopups();
+  document.getElementById(type + "Popup").style.display = "block";
+}
+
+function closeAllPopups(){
+  document.querySelectorAll(".popup").forEach(p => {
+    p.style.display = "none";
+  });
+}
+
+function openSlider(type){
+  closeAllPopups();
+  const track = document.getElementById("sliderTrack");
+  track.innerHTML = "";
+
+  galleryData[type].forEach(img => {
+    const i = document.createElement("img");
+    i.src = img;
+    i.onclick = () => openLightbox(img);
+    track.appendChild(i);
+  });
+
+  document.getElementById("slider").classList.add("active");
+}
+
+function openLightbox(src){
+  document.getElementById("lightboxImg").src = src;
+  document.getElementById("lightbox").classList.add("show");
+}
+
+function closeLightbox(){
+  document.getElementById("lightbox").classList.remove("show");
+}
+</script>
 
 </body>
 </html>
