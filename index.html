@@ -4,7 +4,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Go Nails With Kareena</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
@@ -23,11 +22,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  position: sticky;
-  top: 0;
 }
 
-/* MENU ICON */
 .menu-icon {
   font-size: 28px;
   cursor: pointer;
@@ -45,10 +41,6 @@ body {
   border-radius: 50%;
 }
 
-.logo-text {
-  font-family: 'Playfair Display';
-}
-
 /* SIDEBAR */
 .side-menu {
   position: fixed;
@@ -62,7 +54,6 @@ body {
   flex-direction: column;
   gap: 20px;
   transition: 0.3s;
-  border-radius: 0 20px 20px 0;
   z-index: 999;
 }
 
@@ -93,8 +84,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
   color: white;
+  text-align: center;
 }
 
 /* BUTTON */
@@ -136,10 +127,15 @@ body {
   transform: scale(1);
 }
 
-/* SLIDER */
+/* FULL GALLERY */
 .slider {
+  position: fixed;
+  inset: 0;
+  background: white;
+  z-index: 999;
   display: none;
   padding: 20px;
+  overflow-y: auto;
 }
 
 .slider.active {
@@ -147,14 +143,33 @@ body {
 }
 
 .slider-track {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  overflow-x: auto;
 }
 
 .slider-track img {
-  height: 200px;
+  width: 100%;
   border-radius: 10px;
+}
+
+/* FILTER */
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.filter-buttons button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 20px;
+  background: #eee;
+}
+
+.filter-buttons button.active {
+  background: black;
+  color: white;
 }
 
 /* LIGHTBOX */
@@ -171,6 +186,10 @@ body {
   display: flex;
 }
 
+.lightbox img {
+  max-width: 90%;
+}
+
 /* BOTTOM NAV */
 .bottom-nav {
   position: fixed;
@@ -184,7 +203,9 @@ body {
 
 /* MOBILE */
 @media(max-width:768px){
-  .hero h1 { font-size: 28px; }
+  .slider-track {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 
@@ -197,12 +218,11 @@ body {
 <!-- NAVBAR -->
 
 <div class="navbar">
-
 <div class="menu-icon" onclick="toggleMenu()">☰</div>
 
 <div class="logo">
 <img src="logo.jpeg">
-<div class="logo-text">Go Nails With Kareena</div>
+<div>Go Nails With Kareena</div>
 </div>
 
 <a href="https://wa.me/9779813990976" class="book-btn">Book</a>
@@ -212,9 +232,12 @@ body {
 <!-- SIDEBAR -->
 
 <div id="sideMenu" class="side-menu">
-
-<a href="#">Home</a> <a href="#" onclick="openPopup('services');toggleMenu()">Services</a> <a href="#" onclick="openSlider('all');toggleMenu()">Gallery</a> <a href="#" onclick="openPopup('price');toggleMenu()">Prices</a> <a href="#" onclick="openPopup('contact');toggleMenu()">Contact</a>
-
+<a href="#">Home</a>
+<a href="#" onclick="openPopup('services');toggleMenu()">Services</a>
+<a href="#" onclick="openSlider('all');toggleMenu()">Gallery</a>
+<a href="#" onclick="openPopup('price');toggleMenu()">Prices</a>
+<a href="#" onclick="openPopup('contact');toggleMenu()">Contact</a>
+<a href="#" onclick="openPopup('admin');toggleMenu()">Admin</a>
 </div>
 
 <!-- HERO -->
@@ -231,8 +254,8 @@ body {
 <div id="servicesPopup" class="popup">
 <div class="popup-content">
 <h2>Services</h2>
-<button onclick="openSlider('gel')">Gel Nails</button>
-<button onclick="openSlider('polish')">Gel Polish</button>
+<button onclick="openSlider('gel')">Gel</button>
+<button onclick="openSlider('polish')">Polish</button>
 <button onclick="closeAllPopups()">Close</button>
 </div>
 </div>
@@ -240,8 +263,8 @@ body {
 <div id="pricePopup" class="popup">
 <div class="popup-content">
 <h2>Prices</h2>
-<p>Gel Polish - Rs 1500</p>
-<p>Extensions - Rs 2500</p>
+<p>Gel - Rs1500</p>
+<p>Polish - Rs1200</p>
 <button onclick="closeAllPopups()">Close</button>
 </div>
 </div>
@@ -254,11 +277,32 @@ body {
 </div>
 </div>
 
-<!-- SLIDER -->
+<div id="adminPopup" class="popup">
+<div class="popup-content">
+<h2>Upload Images</h2>
+<input type="file" id="imageUpload" multiple>
+<button onclick="uploadImages()">Upload</button>
+<button onclick="closeAllPopups()">Close</button>
+</div>
+</div>
+
+<!-- GALLERY -->
 
 <div id="slider" class="slider">
+
+<div style="display:flex;justify-content:space-between;">
+<h2>Gallery</h2>
 <button onclick="closeSlider()">Close</button>
+</div>
+
+<div class="filter-buttons">
+<button onclick="openSlider('all')">All</button>
+<button onclick="openSlider('gel')">Gel</button>
+<button onclick="openSlider('polish')">Polish</button>
+</div>
+
 <div id="sliderTrack" class="slider-track"></div>
+
 </div>
 
 <!-- LIGHTBOX -->
@@ -276,11 +320,12 @@ body {
 </div>
 
 <script>
+let storedImages = JSON.parse(localStorage.getItem("gallery")) || [];
 
 const galleryData = {
   gel: ["nail1.jpg","nail2.jpg"],
   polish: ["nail2.jpg","nail1.jpg"],
-  all: ["nail1.jpg","nail2.jpg","nail1.jpg"]
+  all: ["nail1.jpg","nail2.jpg"]
 };
 
 function toggleMenu(){
@@ -298,15 +343,18 @@ function closeAllPopups(){
 }
 
 function openSlider(type){
-  closeAllPopups();
   const track=document.getElementById("sliderTrack");
   track.innerHTML="";
-  galleryData[type].forEach(img=>{
+
+  let allImages=[...galleryData[type],...storedImages];
+
+  allImages.forEach(img=>{
     let i=document.createElement("img");
     i.src=img;
     i.onclick=()=>openLightbox(img);
     track.appendChild(i);
   });
+
   document.getElementById("slider").classList.add("active");
 }
 
@@ -323,14 +371,20 @@ function closeLightbox(){
   document.getElementById("lightbox").classList.remove("show");
 }
 
-/* SWIPE */
-let startX=0;
-document.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
-document.addEventListener("touchend",e=>{
-  let endX=e.changedTouches[0].clientX;
-  if(startX-endX>80) openSlider('all');
-  if(endX-startX>80) closeSlider();
-});
+function uploadImages(){
+  const files=document.getElementById("imageUpload").files;
+
+  for(let file of files){
+    const reader=new FileReader();
+    reader.onload=e=>{
+      storedImages.push(e.target.result);
+      localStorage.setItem("gallery",JSON.stringify(storedImages));
+    };
+    reader.readAsDataURL(file);
+  }
+
+  alert("Uploaded!");
+}
 </script>
 
 </body>
