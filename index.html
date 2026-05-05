@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -21,12 +22,18 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 40px;
-  background: #e6a4b4;
+  padding: 15px 20px;
   position: sticky;
   top: 0;
 }
 
+/* MENU ICON */
+.menu-icon {
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* LOGO */
 .logo {
   display: flex;
   align-items: center;
@@ -34,34 +41,49 @@ body {
 }
 
 .logo img {
-  width: 70px;
-  height: 70px;
+  width: 50px;
   border-radius: 50%;
 }
 
 .logo-text {
-  font-family: 'Playfair Display', serif;
-  font-size: 28px;
+  font-family: 'Playfair Display';
 }
 
-.nav-links {
+/* SIDEBAR */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 220px;
+  height: 100%;
+  background: white;
+  padding: 20px;
   display: flex;
+  flex-direction: column;
   gap: 20px;
+  transition: 0.3s;
+  border-radius: 0 20px 20px 0;
+  z-index: 999;
 }
 
-.nav-links a {
-  text-decoration: none;
-  color: black;
-  font-size: 20px;
+.side-menu.active {
+  left: 0;
 }
 
-/* BUTTON */
-.book-btn {
-  background: black;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 25px;
-  text-decoration: none;
+/* BLUR */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+}
+
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* HERO */
@@ -75,38 +97,46 @@ body {
   color: white;
 }
 
-/* ===== SERVICES ===== */
-.services {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-  gap: 20px;
-  padding: 40px;
+/* BUTTON */
+.book-btn {
+  background: black;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 25px;
+  text-decoration: none;
 }
 
-.service img {
-  width: 100%;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-/* ===== POPUP ===== */
+/* POPUP */
 .popup {
-  display: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.3s;
+}
+
+.popup.show {
+  opacity: 1;
+  visibility: visible;
 }
 
 .popup-content {
   background: white;
   padding: 20px;
-  width: 300px;
-  margin: 100px auto;
-  text-align: center;
-  border-radius: 10px;
+  border-radius: 12px;
+  transform: scale(0.8);
+  transition: 0.3s;
 }
 
-/* ===== SLIDER ===== */
+.popup.show .popup-content {
+  transform: scale(1);
+}
+
+/* SLIDER */
 .slider {
   display: none;
   padding: 20px;
@@ -120,7 +150,6 @@ body {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  scroll-behavior: smooth;
 }
 
 .slider-track img {
@@ -128,86 +157,68 @@ body {
   border-radius: 10px;
 }
 
-/* ===== LIGHTBOX ===== */
+/* LIGHTBOX */
 .lightbox {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.9);
+  background: black;
   justify-content: center;
   align-items: center;
-}
-
-.lightbox img {
-  max-width: 90%;
 }
 
 .lightbox.show {
   display: flex;
 }
 
-/* ===== INSTAGRAM ===== */
-.insta {
-  padding: 30px;
-  text-align: center;
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
 }
 
-.insta iframe {
-  border: none;
-  width: 300px;
-  height: 400px;
-}
-
-/* ===== MOBILE ===== */
-@media (max-width:768px){
-  .navbar {
-    flex-direction: column;
-  }
-
-  .nav-links {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .hero h1 {
-    font-size: 30px;
-  }
-
-  .services {
-    grid-template-columns: 1fr;
-  }
+/* MOBILE */
+@media(max-width:768px){
+  .hero h1 { font-size: 28px; }
 }
 </style>
+
 </head>
 
 <body>
 
+<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
 <!-- NAVBAR -->
+
 <div class="navbar">
 
+<div class="menu-icon" onclick="toggleMenu()">☰</div>
+
 <div class="logo">
-<img src="logo.jpg">
+<img src="logo.jpeg">
 <div class="logo-text">Go Nails With Kareena</div>
 </div>
 
-<div class="nav-links">
-<a href="#">Home</a>
-<a href="#" onclick="openPopup('services')">Services</a>
-<a href="#" onclick="openSlider('all')">Gallery</a>
-<a href="#" onclick="openPopup('price')">Prices</a>
-<a href="#" onclick="openPopup('contact')">Contact</a>
-```
-<a href="https://instagram.com/go_nailswith_kareena" target="_blank"><i class="fab fa-instagram"></i></a>
-<a href="https://www.facebook.com/share/1EFQ8KEnRU/?mibextid=wwXIfr" target="_blank"><i class="fab fa-facebook"></i></a>
-<a href="https://www.tiktok.com/@go_nailswith_kareena" target="_blank"><i class="fab fa-tiktok"></i></a>
-```
+<a href="https://wa.me/9779813990976" class="book-btn">Book</a>
+
 </div>
 
-<a href="https://wa.me/9779813990976" class="book-btn">Book Now</a>
+<!-- SIDEBAR -->
+
+<div id="sideMenu" class="side-menu">
+
+<a href="#">Home</a> <a href="#" onclick="openPopup('services');toggleMenu()">Services</a> <a href="#" onclick="openSlider('all');toggleMenu()">Gallery</a> <a href="#" onclick="openPopup('price');toggleMenu()">Prices</a> <a href="#" onclick="openPopup('contact');toggleMenu()">Contact</a>
 
 </div>
 
 <!-- HERO -->
+
 <div class="hero">
 <div>
 <h1>Be Happy. Be Beautiful. Be You.</h1>
@@ -215,7 +226,8 @@ body {
 </div>
 </div>
 
-<!-- SERVICES POPUP -->
+<!-- POPUPS -->
+
 <div id="servicesPopup" class="popup">
 <div class="popup-content">
 <h2>Services</h2>
@@ -225,18 +237,15 @@ body {
 </div>
 </div>
 
-<!-- PRICE POPUP -->
 <div id="pricePopup" class="popup">
 <div class="popup-content">
-<h2>Price List</h2>
+<h2>Prices</h2>
 <p>Gel Polish - Rs 1500</p>
 <p>Extensions - Rs 2500</p>
-<p>Nail Art - Rs 2000</p>
 <button onclick="closeAllPopups()">Close</button>
 </div>
 </div>
 
-<!-- CONTACT -->
 <div id="contactPopup" class="popup">
 <div class="popup-content">
 <h2>Contact</h2>
@@ -246,50 +255,58 @@ body {
 </div>
 
 <!-- SLIDER -->
+
 <div id="slider" class="slider">
 <button onclick="closeSlider()">Close</button>
-<div class="slider-track" id="sliderTrack"></div>
+<div id="sliderTrack" class="slider-track"></div>
 </div>
 
 <!-- LIGHTBOX -->
+
 <div id="lightbox" class="lightbox" onclick="closeLightbox()">
 <img id="lightboxImg">
 </div>
 
-<!-- INSTAGRAM -->
-<div class="insta">
-<h2>Follow Us</h2>
-<iframe src="https://www.instagram.com/go_nailswith_kareena/embed"></iframe>
+<!-- BOTTOM NAV -->
+
+<div class="bottom-nav">
+<i class="fas fa-home"></i>
+<i class="fas fa-images" onclick="openSlider('all')"></i>
+<i class="fas fa-tags" onclick="openPopup('price')"></i>
 </div>
 
 <script>
+
 const galleryData = {
   gel: ["nail1.jpg","nail2.jpg"],
   polish: ["nail2.jpg","nail1.jpg"],
   all: ["nail1.jpg","nail2.jpg","nail1.jpg"]
 };
 
+function toggleMenu(){
+  document.getElementById("sideMenu").classList.toggle("active");
+  document.getElementById("overlay").classList.toggle("active");
+}
+
 function openPopup(type){
   closeAllPopups();
-  document.getElementById(type + "Popup").style.display = "block";
+  document.getElementById(type+"Popup").classList.add("show");
 }
 
 function closeAllPopups(){
-  document.querySelectorAll(".popup").forEach(p => p.style.display = "none");
+  document.querySelectorAll(".popup").forEach(p=>p.classList.remove("show"));
 }
 
 function openSlider(type){
   closeAllPopups();
-  const track = document.getElementById("sliderTrack");
-  track.innerHTML = "";
-
+  const track=document.getElementById("sliderTrack");
+  track.innerHTML="";
   galleryData[type].forEach(img=>{
-    const i = document.createElement("img");
-    i.src = img;
-    i.onclick = ()=>openLightbox(img);
+    let i=document.createElement("img");
+    i.src=img;
+    i.onclick=()=>openLightbox(img);
     track.appendChild(i);
   });
-
   document.getElementById("slider").classList.add("active");
 }
 
@@ -298,7 +315,7 @@ function closeSlider(){
 }
 
 function openLightbox(src){
-  document.getElementById("lightboxImg").src = src;
+  document.getElementById("lightboxImg").src=src;
   document.getElementById("lightbox").classList.add("show");
 }
 
@@ -306,25 +323,13 @@ function closeLightbox(){
   document.getElementById("lightbox").classList.remove("show");
 }
 
-/* TOUCH SWIPE */
-let isDown=false,startX,scrollLeft;
-const slider=document.getElementById("sliderTrack");
-
-slider.addEventListener("mousedown",e=>{
-  isDown=true;
-  startX=e.pageX-slider.offsetLeft;
-  scrollLeft=slider.scrollLeft;
-});
-
-slider.addEventListener("mouseleave",()=>isDown=false);
-slider.addEventListener("mouseup",()=>isDown=false);
-
-slider.addEventListener("mousemove",e=>{
-  if(!isDown) return;
-  e.preventDefault();
-  const x=e.pageX-slider.offsetLeft;
-  const walk=(x-startX)*2;
-  slider.scrollLeft=scrollLeft-walk;
+/* SWIPE */
+let startX=0;
+document.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
+document.addEventListener("touchend",e=>{
+  let endX=e.changedTouches[0].clientX;
+  if(startX-endX>80) openSlider('all');
+  if(endX-startX>80) closeSlider();
 });
 </script>
 
