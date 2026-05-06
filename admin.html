@@ -324,6 +324,7 @@ function openMainGallery(){
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
+  const storage = getStorage(app);
   window.storage = storage;
 window.ref = ref;
 window.uploadBytes = uploadBytes;
