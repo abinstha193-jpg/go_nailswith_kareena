@@ -202,7 +202,7 @@ function closePreview(){
 }
 
 /* UPLOAD */
-function uploadImages(){
+window.uploadImages = async function(){
   const files = document.getElementById("imageUpload").files;
 
   if(files.length === 0){
@@ -234,28 +234,30 @@ function uploadImages(){
 
   let storedImages = JSON.parse(localStorage.getItem("gallery")) || [];
 
-  for(let file of files){
+for(let file of files){
 
-  const storageRef = ref(storage, "gallery/" + Date.now() + file.name);
+  const storageRef = ref(
+    storage,
+    "gallery/" + Date.now() + "-" + file.name
+  );
 
-  uploadBytes(storageRef, file).then(snapshot => {
+  await uploadBytes(storageRef, file);
 
-    getDownloadURL(snapshot.ref).then(url => {
+  const url = await getDownloadURL(storageRef);
 
-      storedImages.push({
-        src: url,
-        category: category
-      });
-
-      localStorage.setItem("gallery", JSON.stringify(storedImages));
-
-      loadGallery();
-
-    });
-
+  storedImages.push({
+    src: url,
+    category: category
   });
 
 }
+
+localStorage.setItem(
+  "gallery",
+  JSON.stringify(storedImages)
+);
+
+loadGallery();
 
   alert("Uploaded!");
 }
@@ -322,7 +324,10 @@ function openMainGallery(){
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const storage = getStorage(app); 
+  window.storage = storage;
+window.ref = ref;
+window.uploadBytes = uploadBytes;
+window.getDownloadURL = getDownloadURL; 
   // const analytics = getAnalytics(app);
 </script>
 </body>
