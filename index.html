@@ -214,6 +214,80 @@ body {
     grid-template-columns: 1fr;
   }
 }
+.reel-section{
+  width: 100%;
+  overflow-x: auto;
+  padding: 15px 10px;
+  background: #f4a3b5;
+}
+
+.reel-track{
+  display: flex;
+  gap: 10px;
+}
+
+.reel-track img{
+  width: 32%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.reel-box{
+  position: relative;
+  width: 32%;
+  flex-shrink: 0;
+}
+
+.reel-title{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+}
+
+.reel-box img{
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.happy-slider{
+  width: 100%;
+  overflow-x: auto;
+  padding: 10px;
+  background: #f4a3b5;
+}
+
+.happy-track{
+  display: flex;
+  gap: 12px;
+}
+
+.happy-box{
+  width: 85%;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.happy-box img,
+.happy-box video{
+  width: 100%;
+  height: 450px;
+  object-fit: cover;
+}
+
+.happy-name{
+  padding: 10px;
+  font-weight: bold;
+  font-size: 18px;
+}
 </style>
 
 </head>
@@ -268,6 +342,7 @@ body {
   <li onclick="openSlider('removal')">Removal</li>
   <li onclick="openSlider('lashes')">Lashes extensions</li>
   <li onclick="openSlider('lash-lift')">Lash lift</li>
+  <li onclick="openSlider('happy-customer')">Happy Customer</li>
 </ul>
 
 <!-- BACK BUTTON -->
@@ -376,6 +451,7 @@ Click above links to contact us directly!
 <button onclick="openSlider('removal')">Toe Soft Gel</button>
 <button onclick="openSlider('lashes')">Lashes extensions</button>
 <button onclick="openSlider('lash-lift')">Lash lift</button>
+<button onclick="openSlider('happy-customer')">Happy Customer</button>
 </div>
 
 <div id="sliderTrack" class="slider-track"></div>
@@ -386,6 +462,21 @@ Click above links to contact us directly!
 
 <div id="lightbox" class="lightbox" onclick="closeLightbox()">
 <img id="lightboxImg">
+</div>
+
+<div class="reel-section">
+
+  <div class="reel-track" id="reelTrack"></div>
+
+</div>
+<h2 style="padding:15px; margin:0;">
+  💖 Happy Customers
+</h2>
+
+<div class="happy-slider">
+
+  <div class="happy-track" id="happyTrack"></div>
+
 </div>
 
 <!-- BOTTOM NAV -->
@@ -498,6 +589,97 @@ function uploadImages(){
 
   alert("Uploaded!");
 }
+function loadReels(){
+
+  const reelTrack = document.getElementById("reelTrack");
+
+  reelTrack.innerHTML = "";
+
+  let storedImages = JSON.parse(localStorage.getItem("gallery")) || [];
+
+  storedImages.forEach(item=>{
+
+    let box = document.createElement("div");
+    box.className = "reel-box";
+
+    let title = document.createElement("div");
+    title.className = "reel-title";
+    const categoryNames = {
+  "1":"Gel Extension",
+  "2":"Nail Art",
+  "3":"Soft Gel",
+  "4":"Gel Polish",
+  "5":"Removal",
+  "6":"Toe Nail Extension",
+  "7":"Toe Soft Gel",
+  "8":"Toe Gel Polish",
+  "9":"Lash Extension",
+  "10":"Lash Lift",
+  "11":"Polish",
+  "12":"Happy Customer"
+};
+
+title.innerText = categoryNames[item.category] || item.category;
+
+    let img = document.createElement("img");
+    img.src = item.src || item;
+
+    box.appendChild(title);
+    box.appendChild(img);
+
+    reelTrack.appendChild(box);
+
+  });
+
+}
+
+loadReels();
+function loadHappyCustomers(){
+
+  const happyTrack = document.getElementById("happyTrack");
+
+  happyTrack.innerHTML = "";
+
+  let storedImages = JSON.parse(localStorage.getItem("gallery")) || [];
+
+  let happyOnly = storedImages.filter(
+    item => item.category == "12" || item.category == "happy-customer"
+  );
+
+  happyOnly.forEach(item=>{
+
+    let box = document.createElement("div");
+    box.className = "happy-box";
+
+    let media;
+
+    if((item.src || item).includes(".mp4")){
+
+      media = document.createElement("video");
+      media.src = item.src || item;
+      media.controls = true;
+
+    }else{
+
+      media = document.createElement("img");
+      media.src = item.src || item;
+
+    }
+
+    let name = document.createElement("div");
+    name.className = "happy-name";
+    name.innerText = "💖 Happy Customer";
+
+    box.appendChild(media);
+    box.appendChild(name);
+
+    happyTrack.appendChild(box);
+
+  });
+
+}
+
+loadHappyCustomers();
 </script>
 <script type="module">
 
