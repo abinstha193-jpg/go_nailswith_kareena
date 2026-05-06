@@ -210,7 +210,21 @@ function uploadImages(){
     return;
   }
 
-  let category = prompt("Enter category (gel, polish, gel-extNail Extension, Soft Gel, Gel Polish, Removal, Toe Nail Extension, Toe Soft Gel, Toe Gel Polish, Lash Extension, Lash Lift)");
+  let category = prompt(`Choose one:
+
+ 1 = gel-extension
+ 2 = nail-art
+ 3 = softgel
+ 4 = gel-polish
+ 5 = removal
+ 6 = toe-extension
+ 7 = toe-softgel
+ 8 = toe-polish
+ 9 = lashes
+ 10 = lash-lift
+ 11 = polish
+ 12 = Happy Customer
+ `);
 
   // ❌ If user cancels → STOP
   if(!category){
