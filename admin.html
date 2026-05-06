@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+
+<style>
+body {
+  font-family: Arial;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f5f5f5;
+}
+
+/* LOGIN */
+.login-box {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* ADMIN */
+.admin-area {
+  display: none;
+  width: 90%;
+  max-width: 700px;
+  text-align: center;
+}
+
+/* BUTTON */
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+/* GALLERY */
+#adminGallery {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 10px;
+}
+
+.image-box {
+  position: relative;
+}
+
+.image-box img {
+  position: relative;
+  width: 100%;
+  border-radius: 10px;
+  display: block;
+}
+
+/* 3 DOT */
+.menu-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: red;   /* TEMP to SEE it */
+  color: white;
+  border-radius: 50%;
+  padding: 6px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 999;
+}
+
+/* DROPDOWN */
+.dropdown {
+  position: absolute;
+  top: 30px;
+  right: 5px;
+  background: white;
+  border-radius: 8px;
+  display: none;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+
+.dropdown div {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown div:hover {
+  background: #eee;
+}
+
+/* LIGHTBOX */
+#preview {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+#preview img {
+  max-width: 90%;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginBox" class="login-box">
+  <h2>Admin Login</h2>
+  <input type="password" id="password"><br><br>
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- ADMIN -->
+
+<div id="adminArea" class="admin-area">
+<h2>Admin Panel</h2>
+
+<button onclick="openMainGallery()">📂 Open Website Gallery</button>
+<button onclick="closeGallery()" id="closeBtn" style="display:none;">❌ Close Gallery</button>
+<input type="file" id="imageUpload" multiple><br><br> <button onclick="uploadImages()">Upload</button>
+
+  <div id="adminGallery"></div>
+</div>
+
+<!-- PREVIEW -->
+
+<div id="preview" onclick="closePreview()">
+  <img id="previewImg">
+</div>
+
+<script>
+let storedImages = JSON.parse(localStorage.getItem("gallery")) || [];
+
+/* LOGIN */
+function login(){
+  if(document.getElementById("password").value === "1234"){
+    loginBox.style.display="none";
+    adminArea.style.display="block";
+    loadGallery();
+    document.getElementById("adminGallery").style.display = "grid";
+  }
+}
+
+/* LOAD */
+function loadGallery(){
+  const gallery = document.getElementById("adminGallery");
+  gallery.innerHTML = "";
+
+  storedImages.forEach((img, index)=>{
+    let box = document.createElement("div");
+    box.className="image-box";
+
+    let image = document.createElement("img");
+    image.src = img.src || img;
+    image.onclick = ()=>openPreview(img.src || img);
+
+    let menuBtn = document.createElement("div");
+    menuBtn.className="menu-btn";
+    menuBtn.innerText="⋮";
+
+    let dropdown = document.createElement("div");
+    dropdown.className="dropdown";
+
+    dropdown.innerHTML = `
+  <div onclick="saveImage('${img.src || img}')">Save</div>
+  <div onclick="showInfo('${img.src || img}')">Info</div>
+  <div onclick="deleteImage(${index})">Delete</div>
+`;
+
+    menuBtn.onclick = (e)=>{
+      e.stopPropagation();
+      document.querySelectorAll(".dropdown").forEach(d=>d.style.display="none");
+      dropdown.style.display = "block";
+    };
+
+    box.appendChild(image);
+    box.appendChild(menuBtn);
+    box.appendChild(dropdown);
+    gallery.appendChild(box);
+  });
+}
+
+/* PREVIEW */
+function openPreview(src){
+  document.getElementById("previewImg").src = src;
+  document.getElementById("preview").style.display="flex";
+}
+
+function closePreview(){
+  document.getElementById("preview").style.display="none";
+}
+
+/* UPLOAD */
+function uploadImages(){
+  const files = document.getElementById("imageUpload").files;
+
+  if(files.length === 0){
+    alert("No file selected!");
+    return;
+  }
+
+  let category = prompt("Enter category (gel, polish, gel-extNail Extension, Soft Gel, Gel Polish, Removal, Toe Nail Extension, Toe Soft Gel, Toe Gel Polish, Lash Extension, Lash Lift)");
+
+  // ❌ If user cancels → STOP
+  if(!category){
+    alert("Upload cancelled!");
+    return;
+  }
+
+  let storedImages = JSON.parse(localStorage.getItem("gallery")) || [];
+
+  for(let file of files){
+    const reader = new FileReader();
+    reader.onload = e=>{
+      storedImages.push({
+        src: e.target.result,
+        category: category
+      });
+      localStorage.setItem("gallery", JSON.stringify(storedImages));
+      loadGallery(); // refresh
+    };
+    reader.readAsDataURL(file);
+  }
+
+  alert("Uploaded!");
+}
+
+/* DELETE */
+function deleteImage(index){
+  if(confirm("Delete this image?")){
+    storedImages.splice(index,1);
+    localStorage.setItem("gallery", JSON.stringify(storedImages));
+    loadGallery();
+  }
+}
+
+/* SAVE */
+function saveImage(src){
+  const a = document.createElement("a");
+  a.href = src;
+  a.download = "image.jpg";
+  a.click();
+}
+
+/* INFO */
+function showInfo(src){
+  alert("Image size: " + Math.round(src.length/1024) + " KB");
+}
+function openGallery(){
+  document.getElementById("adminGallery").style.display = "grid";
+  document.getElementById("closeBtn").style.display = "inline-block";
+  loadGallery();
+}
+
+function closeGallery(){
+  document.getElementById("adminGallery").style.display = "none";
+  document.getElementById("closeBtn").style.display = "none";
+}
+function openMainGallery(){
+  window.open("index.html#gallery", "_blank");
+}
+</script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+  // import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCCWTRlBQCpftfNxy5kahxvSlhP23ypGbE",
+    authDomain: "gonailswithkareena.firebaseapp.com",
+    projectId: "gonailswithkareena",
+    storageBucket: "gonailswithkareena.firebasestorage.app",
+    messagingSenderId: "702760503657",
+    appId: "1:702760503657:web:aa23fd5650a7ce1f1895f8",
+    measurementId: "G-W0SJQ78G8D"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  // const analytics = getAnalytics(app);
+</script>
+</body>
+</html>
